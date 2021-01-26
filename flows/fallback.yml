@@ -1,0 +1,24 @@
+
+fallback: true
+intents:
+  fallbackIntent:
+    fallback: true
+
+states:
+  init:
+    initial: true
+    transitions:
+      init:
+        fallback: true
+    action:
+      name: fallbackAction
+    end: true
+
+actions:
+  fallbackAction:
+    type: text
+    options:
+      text: 
+            - "Maaf $(config.botDisplayName) tidak mengerti maksud kamu :("
+            - "$(config.botDisplayName) tidak mengerti apa yang kamu bicarakan"
+            - "$(config.botDisplayName) belum paham maksud kamu nih"

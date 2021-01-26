@@ -1,0 +1,13 @@
+name: Raya-bot
+desc: asstien virtual
+timezone: 7
+lang: id
+flows:
+    welcome: $include(./flows/welcome.yml)
+    fallback: $include(./flows/fallback.yml)
+    faq: $include(./flows/faq.yml)
+config: $include(./config.yml)
+nlus: $include(./nlu.yml)
+methods: {}
+tag: null
+author: Habibi Ramadhan

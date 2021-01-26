@@ -1,0 +1,41 @@
+volatile: true #jika kita set 'volatile: true' maka ketika flow ini sudah selesai dieksekusi maka flow nya akan ditutup
+priority: 20 #untuk menentukan prioritas flow yang dijalankan
+intents: #intents -> maksud/tujuan user
+    faq:
+        initial: true #'intial: true' diset di intent dan state pertama
+        fallback: false
+        type: text
+        classifier:
+            nlu: raya-nl #nama nlu, diambil dari nlus.yml
+            expression: faq #model nl yang kita buat, entity yang kita set
+        attributes: #menampung apapun hasil dari masukan intent
+            faq: #nama attributes
+                nlu: raya-nl #nama nlu, diambil dari nlus.yml
+                path: faq  #entity yang kita pakai 
+states: #states -> alur. Penghubung antara intent dan actions
+    init: #state pertama
+        initial: true #'intial: true' diset di intent dan state pertama
+        transitions:
+            answer:
+                fallback: true 
+                # condition: 'intent == "faq"' -> bisa juga pakai kondisi ini
+
+    answer: #state kedua
+        enter: mapfaq #nama method
+        action: #respon dari chatbot untuk user
+            - #respon chatbot jika user tanya topik yang tidak ada di faq
+                name: text
+                condition: "!context.faq" 
+                options:
+                    text: 'Mohon maaf, $(config.botDisplayName) tidak menemukan jawaban yang sesuai dengan keluhan'
+
+            - #respon chatbot jika user tanya topik yang ada di faq
+                name: text
+                condition: context.faq
+                options:
+                    text: $(context.faq.desc) #respon sesuai topik, diambil dari file config.yml
+        end: true #akhir flow harus end state
+
+            
+methods: #methods, bahasa pemrograman javascript
+    mapfaq(ctx): ' ctx.context.faq = ctx.config.faqs[ctx.attributes.faq]; return ctx; ' #buat variable context.faq yang isinya nanti sesuai dengan topik yang dimaksud user, sesuai topik di config

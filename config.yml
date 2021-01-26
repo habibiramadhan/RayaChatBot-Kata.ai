@@ -1,0 +1,27 @@
+botDisplayName: Raya 
+faqs: 
+    website:
+        title: 'Apa H5G memliki website?'
+        desc: 
+            - "Untuk informasi lebih lanjut bisa kujungi https://github.com/habibiramadhan"
+            - "Raya, informasikan untuk informasi lebih dalam anda bisa mengngunjungi  https://github.com/habibiramadhan"
+    outlet:
+        title: 'Dimana sajakah outlet H5G indonesia?'
+        desc: 
+            - "H5G saat ini sudah hadir di wilayah JABODETABEK dan Surabaya"
+            - "Layanan H5G sudah hadir di wilayah JABODETABEK dan Surabaya"      
+    jobvacancy:
+        title: 'Bagaimana jika ingin bertanya seputar lowongan pekerjaan?'
+        desc: 
+            - "Untuk saat ini H5G belum memiliki lowongan"
+            - "Raya informasikan untuk saat ini H5G belum menerima lowongan"
+    promo:
+        title: 'Apa ada promo?'
+        desc: 
+            - "Untuk promo bulan ini paket combo 5G diskon 15%"
+            - "Raya infokan paket combo khusus 5G sedang diskon 15% loh :D"
+    payment:
+        title: 'Apa saja metode pembayaran yang dapat digunakan?'
+        desc: 
+            - "Untuk pembayaran bisa menggunakan Dana atau bisa ke outlet terdekat"
+            - "Raya infokan Untuk pembayaran bisa menggunakan Dana atau juga bisa ke outlet terdekat"
