@@ -1,24 +1,31 @@
+active: true #ketika kita set active berarti flow akan aktif begitupun sebaliknya jika kita set false
+volatile: true #jika kita set 'volatile: true' maka ketika flow ini sudah selesai dieksekusi maka flow nya akan ditutup
+fallback: true #Di set di flow fallback
+#Flow fallback yaitu flow untuk menghandle topik diluar flow yang kita buat
 
-fallback: true
-intents:
-  fallbackIntent:
-    fallback: true
-
-states:
-  init:
-    initial: true
-    transitions:
-      init:
+intents: #intents -> maksud/tujuan user
+    fallbackIntent: #intent pertama
+        type: text
+        initial: true #'intial: true' diset di intent dan state pertama
         fallback: true
-    action:
-      name: fallbackAction
-    end: true
 
-actions:
-  fallbackAction:
-    type: text
-    options:
-      text: 
-            - "Maaf $(config.botDisplayName) tidak mengerti maksud kamu :("
-            - "$(config.botDisplayName) tidak mengerti apa yang kamu bicarakan"
-            - "$(config.botDisplayName) belum paham maksud kamu nih"
+states: #states -> alur. Penghubung antara intent dan actions
+    init: #state pertama
+        initial: true #'intial: true' diset di intent dan state pertama
+        transitions:
+            fallbackState:
+                condition: 'intent == "fallbackIntent"'
+
+    fallbackState: #state kedua
+        action:
+            -   name: fallbackAction
+        end: true #akhir flow harus end state
+
+actions: #respon dari chatbot untuk user
+    fallbackAction:
+        type: text
+        options:
+            text:  
+                    - "Maaf $(config.botDisplayName) tidak mengerti maksud kamu :("
+                    - "$(config.botDisplayName) tidak mengerti apa yang kamu bicarakan"
+                    - "$(config.botDisplayName) belum paham maksud kamu nih"

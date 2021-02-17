@@ -1,0 +1,64 @@
+ner:
+    type: verstandTagger
+    options:
+        model: dcaca5ae-be7f-42f2-a6a1-2b250d4336fd
+     
+qisg:
+    type: verstandClassifier
+    options:
+        model: cb58d784-9e87-40d5-bae1-6077b934c061    
+
+raya-nl: 
+  type: nl 
+  options:
+    nluId: HabibiRamadhan:raya-bot 
+    token: a6523775-c40b-4477-868e-6d977e0716c4
+    output: value
+    threshold: 0.6
+    flatten: true
+
+raya-kata: 
+  type: nl 
+  options:
+    nluId: HabibiRamadhan:raya-bot 
+    token: a6523775-c40b-4477-868e-6d977e0716c4
+    output: value
+    threshold: 0.6 
+    entity: kata
+
+order: #nama nlu (natural language understanding)
+  type: keyword #type keywords karena kita set sendiri keywords dan label yang kita inginkan/perlukan
+  options:
+    keywords:
+      orderKey: #keyword
+        - pesan #label
+        - order
+        - beli
+
+quantity: #nama nlu (natural language understanding)
+  type: regex #regex = regular expression
+  options:
+    regex: \d+ #karakter range 1-9
+
+yesno: #nama nlu (natural language understanding)
+  type: keyword #type keywords karena kita set sendiri keywords dan label yang kita inginkan/perlukan
+  options:
+    keywords:
+      "yes": #keyword
+        - "yes" #label
+        - iya
+        - oke
+      "no": #keyword
+        - tidak #label
+        - "no"
+        - g
+        - gamau
+
+cancel_nlu: #nama nlu (natural language understanding)
+  type: keyword #type keywords karena kita set sendiri keywords dan label yang kita inginkan/perlukan
+  options:
+    keywords:
+      cancel: #keyword
+        - cancel #label
+        - batal
+        - gajadi

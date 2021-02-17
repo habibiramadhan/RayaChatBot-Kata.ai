@@ -1,0 +1,306 @@
+priority: 20 #untuk menentukan prioritas flow yang dijalankan
+intents: #intents -> maksud/tujuan user
+    pizzaOrder:
+        type: text
+        initial: true #'intial: true' diset di intent dan state pertama
+        fallback: false
+        classifier:
+            nlu: order #nama nlu, diambil dari nlus.yml
+            match: orderKey #nama keyword
+
+    pizzaChosen: 
+        type: data 
+        initial: false
+        fallback: false
+        condition: 'payload.type == "pizza"' #intent untuk action carousel/button
+
+    gotoMenu:
+        type: data
+        initial: false
+        fallback: false
+        condition: 'payload.purpose == "ya"' #intent untuk action carousel/button
+
+    endConv:
+        type: data
+        initial: false
+        fallback: false
+        condition: 'payload.purpose == "tidak"' #intent untuk action carousel/button
+
+    idle:
+        priority: 5
+        type: command
+        fallback: false
+        command: 'content == "idle"'
+        condition: 'context.$state == "ShowPizza"'
+
+    reenter: #saat chatbot bingung menangkap content, dia otomatis eksekusi ini
+        type: command
+        initial: false
+        fallback: false
+        condition: 'content == "reenter"' 
+
+    pizzaQuantity:
+        type: text
+        initial: false
+        fallback: false
+        classifier:
+            nlu: quantity #nama nlu, diambil dari nlus.yml
+        attributes:
+            quantity:
+                nlu: quantity #nama nlu, diambil dari nlus.yml
+
+    yesConfirm:
+        type: text
+        initial: false
+        fallback: false
+        classifier:
+            nlu: yesno #nama nlu, diambil dari nlus.yml
+            match: yes #nama keyword
+
+    noConfirm:
+        type: text
+        initial: false
+        fallback: false
+        classifier:
+            nlu: yesno #nama nlu, diambil dari nlus.yml
+            match: no #nama keyword
+
+    cancel_intent:
+        type: text
+        initial: true
+        fallback: false
+        priority: 15 #untuk menentukan prioritas intent yang dijalankan
+        classifier:
+            nlu: cancel_nlu #nama nlu, diambil dari nlus.yml
+            match: cancel #nama keyword
+
+    initCommand:
+        type: command
+        initial: true
+        fallback: false
+        condition: 'content=="gotoMenuHome"' #intent untuk action command
+
+    # fallback: 
+    #     fallback: true
+
+states: #states -> alur. Penghubung antara intent dan actions
+    init: #state pertama
+        initial: true #'intial: true' diset di intent dan state pertama
+        transitions:
+            ShowPizza: #akan ke state ShowPizza apabila memenuhi kondisi
+                condition: 'intent == "pizzaOrder" || intent == "initCommand"'
+            init: #akan ke state init (state yang sama/mengulang) apabila kondisi fallback
+                fallback: true 
+
+    ShowPizza: #state kedua
+        enter: parseTimeAll
+        action:
+            -   name: removeUsertimeout
+            -   name: pizzaMenu
+                condition: 'data.counter == 1'
+            -   name: askOptions
+                condition: 'data.counter == 1'
+            -   name: act_usertimeout
+                condition: 'data.counter == 2'
+            -   name: usertimeout
+                condition: 'data.counter <= 2'
+            -   name: finish
+                condition: 'data.counter == 3'
+        transitions:
+            pizzaQuantity: #akan ke state pizzaQuantity apabila memenuhi kondisi
+                condition: 'intent == "pizzaChosen"'
+                mapping: #menampung attributes
+                    context.pizza: payload.pizza
+            ShowPizza: #akan ke state ShowPizza (state yang sama/mengulang) apabila kondisi fallback
+                condition: 'intent == "idle"'
+                fallback: true
+
+    pizzaQuantity:
+        action: askQuantity
+        transitions:
+            confirmPizza:
+                condition: 'intent == "pizzaQuantity"'
+                mapping:
+                    context.quantity: attributes.quantity
+            pizzaQuantity:
+                fallback: true
+
+    confirmPizza:
+        action: askConfirmation
+        transitions:
+            sayThanks:
+                condition: 'intent == "yesConfirm"'
+            nextState:
+                condition: 'intent == "noConfirm"'
+            confirmPizza:
+                fallback: true
+        
+    nextState:
+        action:
+            -   name: askNext
+        transitions:
+            gotoMenu:
+                condition: 'intent == "gotoMenu"'
+            endState:
+                condition: 'intent == "endConv"'
+            nextState:
+                fallback: true
+
+    gotoMenu:
+        action:
+            -  name: initCommand
+        end: true #akhir flow harus end state
+
+    endState:
+        action:
+            -   name: sayCancel
+        end: true #akhir flow harus end state
+
+    sayThanks:
+        action:
+            -   name: sayThanks
+        end: true #akhir flow harus end state
+
+    cancelPizza:
+        action: initCommand
+        float: #floating state, state yang berdiri sendiri, bisa di eksekusi ditengah tengah conversation
+            condition: 'intent == "cancel_intent"'
+            priority: 15 #untuk menentukan prioritas state yang dijalankan
+        end: true #akhir flow harus end state
+        
+actions: #respon dari chatbot untuk user
+    askOptions:
+        type: text #action yang tipe nya text
+        options:
+            text: 
+                - 'Silahkan pilih menu yang kamu mau yaa, $(config.botDisplayName) akan membantu mu :)'
+                - 'silahkan pilih menu'
+
+    pizzaMenu:
+        type: template
+        options:
+            type: carousel #action yang tipe nya carousel
+            items:
+              - title: Nestle Milo
+                text: "Nestle Milo 700g"
+                thumbnailImageUrl: "https://cdn.monotaro.id/media/catalog/product/l/8/l8S000000764-15.jpg"
+                actions:
+                  - type: postback
+                    label: Nestle Milo
+                    payload:
+                        type: pizza
+                        pizza: Nestle Milo
+              - title: Koko Krunch
+                text: "Nestle Koko Krunch 300g"
+                thumbnailImageUrl: "https://cf.shopee.co.id/file/581b9bd4ca2fcfb1d2e65472d40a02e4"
+                actions:
+                  - type: postback
+                    label: Koko Krunch
+                    payload:
+                        type: pizza
+                        pizza: Koko Krunch
+
+    askQuantity:
+        type: text
+        options:
+            text: 'Berapa item yang kamu inginkan? (Min 1-9)'
+
+    askConfirmation:
+        type: text
+        options:
+            text: 'Apakah benar kamu ingin membeli $(context.pizza)?'
+
+    askNext:
+        type: template
+        options:
+            type: button #action yang tipe nya button
+            items:
+                text: Apakah kamu ingin kembali ke menu utama?
+                title: '.'
+                actions:
+                    -   type: 'postback'
+                        label: Ya
+                        payload:
+                            purpose: ya
+                    -   type: 'postback'
+                        label: Tidak
+                        payload:
+                            purpose: tidak
+
+    sayThanks:
+        type: text
+        options:
+            text: 'Terima kasih atas pesanan kamu'
+
+    sayCancel:
+        type: text
+        options:
+            text: 'Pesanan kamu dibatalkan! Terima kasih'
+    
+    act_usertimeout:
+        type: text
+        options: 
+            text: "Apakah kamu sibuk? $(config.botDisplayName) masih menunggu balasan dari kamu nih"
+
+    finish:
+        type: text
+        options:
+            text: "terima kasih"
+
+    initCommand:
+        type: command #action yang tipe nya command, dia bawa content dan harus ditangkap oleh intent lagi
+        options:
+            command: gotoMenuHome #keluaran content
+
+    usertimeout:
+        type: schedule
+        options:
+            id: idle
+            command: add
+            message:
+                type: command
+                content: idle
+            start: $(data.parsedTime)
+            end: $(data.parsedTimeEnd)
+            freqType: minute
+            freqInterval: 5
+
+    removeUsertimeout:
+        type: schedule
+        options:
+            id: idle
+            command: remove
+
+methods:
+    parseTimeAll(ctx): "
+        let date = new Date(ctx.context.$now + 60000);
+        let dateISO = date.toISOString();
+        let parsedDate = dateISO.split('T');
+        let parsedTime = parsedDate[1].split('.');
+        ctx.data.parsedTime = parsedDate[0] + ' ' + parsedTime[0];
+
+        let dateEnd = new Date(ctx.context.$now + 60000);
+        let dateISOEnd = dateEnd.toISOString();
+        let parsedDateEnd = dateISOEnd.split('T');
+        let parsedTimeEnd = parsedDateEnd[1].split('.');
+        ctx.data.parsedTimeEnd = parsedDateEnd[0] + ' ' + parsedTimeEnd[0];
+
+        if(ctx.context.$state == 'ShowPizza'){
+            var intent = ctx.intent;
+            ctx.data.intent = intent;
+            if(ctx.data.intent == 'idle' && ctx.data.intent != 'fallback'){
+                ctx.data.counter = ctx.data.counter > 3 ? 0 : (ctx.data.counter || 0) + 1;
+            }
+
+            if(ctx.data.intent == 'fallback' && ctx.data.intent != 'idle'){
+                ctx.data.counter = 1;
+            }
+
+            if(ctx.data.intent != 'idle' && ctx.data.intent != 'fallback'){
+                ctx.data.counter = 1;
+            }
+
+        }
+
+        return ctx;
+    "

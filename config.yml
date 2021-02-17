@@ -1,27 +1,22 @@
-botDisplayName: Raya 
-faqs: 
-    website:
-        title: 'Apa H5G memliki website?'
-        desc: 
-            - "Untuk informasi lebih lanjut bisa kujungi https://github.com/habibiramadhan"
-            - "Raya, informasikan untuk informasi lebih dalam anda bisa mengngunjungi  https://github.com/habibiramadhan"
-    outlet:
-        title: 'Dimana sajakah outlet H5G indonesia?'
-        desc: 
-            - "H5G saat ini sudah hadir di wilayah JABODETABEK dan Surabaya"
-            - "Layanan H5G sudah hadir di wilayah JABODETABEK dan Surabaya"      
-    jobvacancy:
-        title: 'Bagaimana jika ingin bertanya seputar lowongan pekerjaan?'
-        desc: 
-            - "Untuk saat ini H5G belum memiliki lowongan"
-            - "Raya informasikan untuk saat ini H5G belum menerima lowongan"
-    promo:
-        title: 'Apa ada promo?'
-        desc: 
-            - "Untuk promo bulan ini paket combo 5G diskon 15%"
-            - "Raya infokan paket combo khusus 5G sedang diskon 15% loh :D"
-    payment:
-        title: 'Apa saja metode pembayaran yang dapat digunakan?'
-        desc: 
-            - "Untuk pembayaran bisa menggunakan Dana atau bisa ke outlet terdekat"
-            - "Raya infokan Untuk pembayaran bisa menggunakan Dana atau juga bisa ke outlet terdekat"
+#config ini adalah untuk konfigurasi-konfigurasi chatbot yang akan dipakai, con: nama chatbot, base url api, customize error/timeout message dll
+botDisplayName: Stadia #konfigurasi nama chatbot
+faqs: #topik untuk faq
+  website:
+    title: "Apa nestle indonesia punya website?"
+    desc: 
+          - "Faiz informasikan untuk website pizza indonesia kamu bisa akses di https://www.nestle.co.id/"
+          -  "untuk website pizza indonesia kamu bisa akses di https://www.nestle.co.id/"
+  pemesanan:
+    title: "Apakah saya bisa pesan online?"
+    desc: "Untuk pemesanan online bisa melalui chat ini atau menggunakan e-commerce"
+  jobvacancy:
+    title: "Bagaimana jika ingin bertanya seputar lowongan pekerjaan?"
+    desc: "Untuk lowongan pekerjaan di Nestle Indonesia dapat datang langsung ke outlet terdekat atau bisa kirimkan CV melalui email ke career@nestle.co.id"
+  promo:
+    title: "Apa ada promo?"
+    desc:   
+          - "Untuk promo bulan ini kami hanya mengeluarkan promo untuk pemesanan offline, silahkan tunggu promo menarik lainnya! :)"
+          - "untuk website pizza indonesia kamu bisa akses di https://www.nestle.co.id/"
+  payment:
+    title: "Apa saja metode pembayaran yang dapat digunakan?"
+    desc: "Melalui website, kamu dapat membayar pesanan melalui dua cara yaitu Online Payment dan Payment on Delivery. Online Payment terdiri dari Credit Card, Doku Wallets dan BCA Virtual Account. Sedangkan, Payment on Delivery yaitu pembayaran melalui Delivery Man yang mengantarkan jika kamu memilih layanan Delivery yaitu terdiri dari Swipe on Delivery melalui mesin EDC dan pembayaran secara cash"
